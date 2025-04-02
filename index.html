@@ -19,19 +19,23 @@
         }
 
         .play-button {
-            padding: 15px 30px;
-            font-size: 24px;
-            background-color: #000000;
-            color: rgb(255, 255, 255);
+            background-color: transparent;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            padding: 0;
+            width: 200px;
+            height: 100px;
+            background-image: url('assets/play.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
             margin-top: 440px;
+            transition: transform 0.3s ease;
         }
 
         .play-button:hover {
-            background-color: #616461;
+            transform: scale(1.2);
+            opacity: 1;
         }
     </style>
     <script>
@@ -43,6 +47,9 @@
     </script>
 </head>
 <body>
+    <button class="play-button"></button>
+</body>
+</html>
     <button class="play-button">Play Game</button>
 </body>
 </html>
