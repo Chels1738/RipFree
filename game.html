@@ -19,6 +19,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: url('assets/mouse.png') 15 19, auto;
         }
 
         canvas {
@@ -43,12 +44,16 @@
         
         /* Custom Runner Styles */
         div.gm4html5_div_class {
-            margin: 0px;
-            padding: 0px;
-            border: 0px;
+            position: relative;
+            width: auto;
+            height: auto;
+            background: url('assets/border.png') no-repeat center center;
+            background-size: 100% 100%;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 0 auto;
+            padding: 100px; /* Increased padding for a bigger border */
         }
         div.gm4html5_login {
             padding: 20px;
@@ -68,9 +73,60 @@
         div.gm4html5_login_header {
             text-align: center;
         }
+        .pause-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            border-radius: 50%;
+            padding: 8px;
+            z-index: 20;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .pause-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .pause-icon {
+            width: 32px;
+            height: 32px;
+            display: block;
+        }
+        #canvas {
+            position: static;
+            left: auto;
+            top: auto;
+            width: 900px;   /* Reduced width */
+            height: 540px;   /* Reduced height */
+            display: block;
+        }
+
+        body,
+        button,
+        a,
+        input,
+        select,
+        textarea {
+            cursor: url('assets/mouse.png') 15 19, auto;
+        }
+
+        button,
+        a {
+            cursor: pointer; /* or use another custom cursor if you want */
+        }
     </style>
 </head>
 <body>
+    <button class="pause-btn" onclick="pauseGame()">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="4" width="4" height="16"/>
+            <rect x="14" y="4" width="4" height="16"/>
+        </svg>
+    </button>
     <div class="gm4html5_div_class" id="gm4html5_div_id">
         <canvas id="canvas" width="1152" height="672">
             <p>Your browser doesn't support HTML5 canvas.</p>
@@ -80,5 +136,11 @@
     <!-- Run the game code -->
     <script type="text/javascript" src="html5game/RipFree.js?cachebust=728263168"></script>
     <script>window.onload = GameMaker_Init;</script>
+    <script>
+    function pauseGame() {
+        // Redirect to the settings page when paused
+        window.location.href = 'settings.html';
+    }
+    </script>
 </body>
 </html>
