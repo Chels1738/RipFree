@@ -16,6 +16,7 @@
             background-size: 105%;
             background-position: center;
             background-repeat: no-repeat;
+            cursor: url('assets/mouse.png') 0 0, auto;
         }
 
         .play-button {
@@ -39,6 +40,35 @@
         .play-button:hover {
             transform: translate(-50%, -50%) scale(1.1);  /* Maintain centering while scaling */
         }
+
+        .settings-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .settings-button:hover {
+            background-color: white;
+            color: black;
+        }
+
+        .settings-icon {
+            position: absolute;
+            bottom: 640px;   /* Distance from the bottom */
+            left: 990px;     /* Distance from the left */
+            width: 64px;
+            height: auto;
+            z-index: 10;
+            cursor: pointer;
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -50,5 +80,8 @@
 </head>
 <body>
     <button class="play-button"></button>
+    <a href="settings.html">
+        <img src="assets/set.png" alt="Settings" class="settings-icon">
+    </a>
 </body>
 </html>
