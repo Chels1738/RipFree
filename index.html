@@ -77,34 +77,6 @@
             opacity: 1;
         }
 
-        /* Removed music control styles */
-        /*
-        .music-control {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .music-control:hover {
-            transform: scale(1.1);
-        }
-
-        .music-icon {
-            width: 40px;
-            height: auto;
-        }
-
-        #backgroundMusic {
-            display: none;
-        }
-        */
-
-        /* Comment Section Styles */
         .comment-section {
             position: fixed;
             right: -400px;
@@ -176,48 +148,11 @@
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Removed music variables and localStorage logic
-            // const backgroundMusic = document.getElementById('backgroundMusic');
-            // const musicControl = document.querySelector('.music-control');
-            // let isMusicPlaying = false;
-
-            // Removed Load music state from localStorage
-            // const savedMusicState = localStorage.getItem('musicPlaying');
-            // if (savedMusicState === 'true') {
-            //     musicControl.addEventListener('click', function() {
-            //         if (!isMusicPlaying) {
-            //             backgroundMusic.play().catch(function(error) {
-            //                 console.log("Audio play failed:", error);
-            //             });
-            //         }
-            //     });
-            //     isMusicPlaying = true;
-            //     musicControl.querySelector('img').src = 'assets/music-on.png';
-            // }
 
             document.querySelector('.play-button').addEventListener('click', function() {
                 window.location.href = 'game.html';
             });
 
-            // Removed music control event listener
-            // musicControl.addEventListener('click', function() {
-            //     if (isMusicPlaying) {
-            //         backgroundMusic.pause();
-            //         musicControl.querySelector('img').src = 'assets/music-off.png';
-            //     } else {
-            //         backgroundMusic.play().catch(function(error) {
-            //             console.log("Audio play failed:", error);
-            //         });
-            //         musicControl.querySelector('img').src = 'assets/music-on.png';
-            //     }
-            //     isMusicPlaying = !isMusicPlaying;
-            //     localStorage.setItem('musicPlaying', isMusicPlaying);
-            // });
-
-            // Removed audio error handling
-            // backgroundMusic.addEventListener('error', function(e) {
-            //     console.log("Audio loading error:", e);
-            // });
         });
 
         function toggleComments() {
@@ -242,7 +177,6 @@
             }
         }
 
-        // Allow submitting comments with Enter key
         document.getElementById('commentInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -256,19 +190,7 @@
     <a href="settings.html" class="settings-button">
         <img src="assets/set.png" alt="Settings" class="settings-icon">
     </a>
-    <!-- Removed music control button -->
-    <!--
-    <button class="music-control">
-        <img src="assets/music-off.png" alt="Music Control" class="music-icon">
-    </button>
-    -->
-    <!-- Removed audio element -->
-    <!--
-    <audio id="backgroundMusic" preload="auto">
-        <source src="assets/background-music.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-    -->
+
 
     <button class="comment-toggle" onclick="toggleComments()">Comments</button>
     <div class="comment-section" id="commentSection">
