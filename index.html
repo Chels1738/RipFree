@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ripfree</title>
+    <title>RipFREE!</title>
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="RipFREE!">
+    <meta property="og:description" content="Play RipFREE! - An exciting game experience">
+    <meta property="og:image" content="assets/background1.png">
+    <meta property="og:url" content="https://ripfree.netlify.app/>
+    <meta property="og:type" content="website">
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RipFREE!">
+    <meta name="twitter:description" content="Play RipFREE! - An exciting game experience">
+    <meta name="twitter:image" content="assets/background1.png">
     <style>
         body {
             margin: 0;
@@ -31,57 +42,244 @@
             background-repeat: no-repeat;
             background-position: center;
             position: absolute;
-            top: 47%;           /* Position from top */
-            left: 50%;          /* Position from left */
-            transform: translate(-50%, -50%);  /* Center both horizontally and vertically */
+            top: 47%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             transition: transform 0.2s ease;
         }
-
         .play-button:hover {
-            transform: translate(-50%, -50%) scale(1.1);  /* Maintain centering while scaling */
+           transform: translate(-50%, -50%) scale(1.1);
         }
-
+        
         .settings-button {
             position: absolute;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
+            background: none;
+            border: none;
+            padding: 0;
             cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
         .settings-button:hover {
-            background-color: white;
-            color: black;
+            transform: scale(1.1);
         }
 
         .settings-icon {
-            position: absolute;
-            bottom: 640px;   /* Distance from the bottom */
-            left: 990px;     /* Distance from the left */
-            width: 64px;
+            width: 40px;
             height: auto;
-            z-index: 10;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .settings-button:hover .settings-icon {
+            opacity: 1;
+        }
+
+        /* Removed music control styles */
+        /*
+        .music-control {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+        }
+
+        .music-icon {
+            width: 40px;
+            height: auto;
+        }
+
+        #backgroundMusic {
+            display: none;
+        }
+        */
+
+        /* Comment Section Styles */
+        .comment-section {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .comment-section.active {
+            right: 0;
+        }
+
+        .comment-toggle {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #404040;
+            color: #00ff00;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .comment-list {
+            height: calc(100vh - 180px);
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .comment {
+            background: #303030;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .comment-form {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 10px;
+            background: #303030;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .comment-submit {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
         }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Removed music variables and localStorage logic
+            // const backgroundMusic = document.getElementById('backgroundMusic');
+            // const musicControl = document.querySelector('.music-control');
+            // let isMusicPlaying = false;
+
+            // Removed Load music state from localStorage
+            // const savedMusicState = localStorage.getItem('musicPlaying');
+            // if (savedMusicState === 'true') {
+            //     musicControl.addEventListener('click', function() {
+            //         if (!isMusicPlaying) {
+            //             backgroundMusic.play().catch(function(error) {
+            //                 console.log("Audio play failed:", error);
+            //             });
+            //         }
+            //     });
+            //     isMusicPlaying = true;
+            //     musicControl.querySelector('img').src = 'assets/music-on.png';
+            // }
+
             document.querySelector('.play-button').addEventListener('click', function() {
                 window.location.href = 'game.html';
             });
+
+            // Removed music control event listener
+            // musicControl.addEventListener('click', function() {
+            //     if (isMusicPlaying) {
+            //         backgroundMusic.pause();
+            //         musicControl.querySelector('img').src = 'assets/music-off.png';
+            //     } else {
+            //         backgroundMusic.play().catch(function(error) {
+            //             console.log("Audio play failed:", error);
+            //         });
+            //         musicControl.querySelector('img').src = 'assets/music-on.png';
+            //     }
+            //     isMusicPlaying = !isMusicPlaying;
+            //     localStorage.setItem('musicPlaying', isMusicPlaying);
+            // });
+
+            // Removed audio error handling
+            // backgroundMusic.addEventListener('error', function(e) {
+            //     console.log("Audio loading error:", e);
+            // });
+        });
+
+        function toggleComments() {
+            const commentSection = document.getElementById('commentSection');
+            commentSection.classList.toggle('active');
+        }
+
+        function addComment() {
+            const commentInput = document.getElementById('commentInput');
+            const commentList = document.getElementById('commentList');
+            
+            if (commentInput.value.trim() !== '') {
+                const comment = document.createElement('div');
+                comment.className = 'comment';
+                comment.innerHTML = `
+                    <div style="color: #00ff00; margin-bottom: 5px;">Anonymous</div>
+                    <div style="color: #cccccc;">${commentInput.value}</div>
+                `;
+                commentList.appendChild(comment);
+                commentInput.value = '';
+                commentList.scrollTop = commentList.scrollHeight;
+            }
+        }
+
+        // Allow submitting comments with Enter key
+        document.getElementById('commentInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addComment();
+            }
         });
     </script>
 </head>
 <body>
     <button class="play-button"></button>
-    <a href="settings.html">
+    <a href="settings.html" class="settings-button">
         <img src="assets/set.png" alt="Settings" class="settings-icon">
     </a>
+    <!-- Removed music control button -->
+    <!--
+    <button class="music-control">
+        <img src="assets/music-off.png" alt="Music Control" class="music-icon">
+    </button>
+    -->
+    <!-- Removed audio element -->
+    <!--
+    <audio id="backgroundMusic" preload="auto">
+        <source src="assets/background-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    -->
+
+    <button class="comment-toggle" onclick="toggleComments()">Comments</button>
+    <div class="comment-section" id="commentSection">
+        <h2 style="color: #00ff00; margin-top: 0;">Comments</h2>
+        <div class="comment-list" id="commentList">
+            <!-- Comments will be added here dynamically -->
+        </div>
+        <div class="comment-form">
+            <textarea class="comment-input" id="commentInput" placeholder="Write a comment..."></textarea>
+            <button class="comment-submit" onclick="addComment()">Post Comment</button>
+        </div>
+    </div>
 </body>
 </html>
