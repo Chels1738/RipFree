@@ -12,14 +12,17 @@
         body {
             background: #000000;
             color: #cccccc;
-            margin: 0px;
-            padding: 0px;
-            border: 0px;
-            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: url('assets/mouse.png') 15 19, auto;
+            background-image: url('assets/border.png');
+            background-size: 80%;
+            background-position: center;
+            background-repeat: no-repeat;
+            cursor: url('assets/mouse.png') 0 0, auto;
         }
 
         canvas {
@@ -33,6 +36,7 @@
             max-width: 100%;
             max-height: 100vh;
         }
+
         :-webkit-full-screen #canvas {
             width: 100%;
             height: 100%;
@@ -44,35 +48,29 @@
         
         /* Custom Runner Styles */
         div.gm4html5_div_class {
-            position: relative;
-            width: auto;
-            height: auto;
-            background: url('assets/border.png') no-repeat center center;
-            background-size: 100% 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-            padding: 100px; /* Increased padding for a bigger border */
-        }
+            margin: 0px;
+            padding: 0px;
+            border: 0px;
+            }
         div.gm4html5_login {
             padding: 20px;
             position: absolute;
             border: solid 2px #000000;
             background-color: #404040;
-            color: #00ff00;
+            color:#00ff00;
             border-radius: 15px;
             box-shadow: #101010 20px 20px 40px;
-        }
+            }
         div.gm4html5_cancel_button {
             float: right;
-        }
+            }
         div.gm4html5_login_button {
             float: left;
-        }
+            }
         div.gm4html5_login_header {
             text-align: center;
-        }
+            }
+
         .pause-btn {
             position: absolute;
             top: 24px;
@@ -101,7 +99,7 @@
             left: auto;
             top: auto;
             width: 900px;   /* Reduced width */
-            height: 540px;   /* Reduced height */
+            height: 540px; 
             display: block;
         }
 
@@ -118,9 +116,44 @@
         a {
             cursor: pointer; /* or use another custom cursor if you want */
         }
+
+        /* Music Control Styles */
+        .music-control {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 20; /* Ensure it's above the canvas */
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+        }
+
+        .music-icon {
+            width: 40px;
+            height: auto;
+        }
+
+        #backgroundMusic {
+            display: none;
+        }
     </style>
+
+    <!-- Custom PostStyle code is injected here -->
+
+    <!-- Builtin injector for injecting flurry analytics code -->
+
 </head>
 <body>
+    <!-- Custom PostHead code is injected here -->
+
+    <!-- Custom PreBody code is injected here -->
+
     <button class="pause-btn" onclick="pauseGame()">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <rect x="6" y="4" width="4" height="16"/>
@@ -128,6 +161,10 @@
         </svg>
     </button>
     <div class="gm4html5_div_class" id="gm4html5_div_id">
+
+        <!-- Builtin injector for splash screen -->
+
+        <!-- Create the canvas element the game draws to -->
         <canvas id="canvas" width="1152" height="672">
             <p>Your browser doesn't support HTML5 canvas.</p>
         </canvas>
@@ -135,12 +172,22 @@
 
     <!-- Run the game code -->
     <script type="text/javascript" src="html5game/RipFree.js?cachebust=728263168"></script>
+
+    <!-- Builtin injector for injecting runner path -->
+
     <script>window.onload = GameMaker_Init;</script>
+
     <script>
     function pauseGame() {
         // Redirect to the settings page when paused
         window.location.href = 'settings.html';
     }
     </script>
+
+    <!-- Builtin injector for injecting google analytics code -->
+
 </body>
+
+<!-- Custom PostBody code is injected here -->
+
 </html>
