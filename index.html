@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RipFREE!</title>
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="RipFREE!">
-    <meta property="og:description" content="Play RipFREE! - An exciting game experience">
-    <meta property="og:image" content="assets/background1.png">
-    <meta property="og:url" content="https://ripfree.netlify.app/>
+    <meta property="og:title" content="RipFREE! - Play Now">
+    <meta property="og:description" content="Click to play RipFREE! - An exciting adventure game">
+    <meta property="og:image" content="https://ripfree.netlify.app/assets/background1.png">
+    <meta property="og:url" content="https://ripfree.netlify.app">
     <meta property="og:type" content="website">
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="RipFREE!">
-    <meta name="twitter:description" content="Play RipFREE! - An exciting game experience">
-    <meta name="twitter:image" content="assets/background1.png">
+
     <style>
         body {
             margin: 0;
@@ -148,11 +144,12 @@
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
             document.querySelector('.play-button').addEventListener('click', function() {
                 window.location.href = 'game.html';
             });
 
+            // Load saved comments when page loads
+            loadComments();
         });
 
         function toggleComments() {
@@ -160,27 +157,73 @@
             commentSection.classList.toggle('active');
         }
 
+        function loadComments() {
+            const commentList = document.getElementById('commentList');
+            const savedComments = JSON.parse(localStorage.getItem('gameComments') || '[]');
+            
+            // Clear existing comments
+            commentList.innerHTML = '';
+            
+            // Add each saved comment
+            savedComments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                commentElement.innerHTML = `
+                    <div style="color: #00ff00; margin-bottom: 5px;">Anonymous</div>
+                    <div style="color: #cccccc;">${comment.text}</div>
+                `;
+                commentList.appendChild(commentElement);
+            });
+            
+            // Scroll to bottom
+            commentList.scrollTop = commentList.scrollHeight;
+        }
+
         function addComment() {
             const commentInput = document.getElementById('commentInput');
             const commentList = document.getElementById('commentList');
             
             if (commentInput.value.trim() !== '') {
+                // Create new comment object
+                const newComment = {
+                    text: commentInput.value,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Get existing comments
+                const savedComments = JSON.parse(localStorage.getItem('gameComments') || '[]');
+                
+                // Add new comment
+                savedComments.push(newComment);
+                
+                // Save to localStorage
+                localStorage.setItem('gameComments', JSON.stringify(savedComments));
+                
+                // Add to display
                 const comment = document.createElement('div');
                 comment.className = 'comment';
                 comment.innerHTML = `
                     <div style="color: #00ff00; margin-bottom: 5px;">Anonymous</div>
-                    <div style="color: #cccccc;">${commentInput.value}</div>
+                    <div style="color: #cccccc;">${newComment.text}</div>
                 `;
                 commentList.appendChild(comment);
+                
+                // Clear input and scroll to bottom
                 commentInput.value = '';
                 commentList.scrollTop = commentList.scrollHeight;
             }
         }
 
-        document.getElementById('commentInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                addComment();
+        // Allow submitting comments with Enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            const commentInput = document.getElementById('commentInput');
+            if (commentInput) {
+                commentInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        addComment();
+                    }
+                });
             }
         });
     </script>
@@ -190,7 +233,6 @@
     <a href="settings.html" class="settings-button">
         <img src="assets/set.png" alt="Settings" class="settings-icon">
     </a>
-
 
     <button class="comment-toggle" onclick="toggleComments()">Comments</button>
     <div class="comment-section" id="commentSection">
