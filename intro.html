@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RipFREE! - Intro</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            overflow: hidden;
+            cursor: url('assets/mouse.png') 0 0, auto;
+        }
+
+        #introVideo {
+            position: fixed;
+            right: 50%;
+            bottom: 50%;
+            transform: translate(50%, 50%);
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+            z-index: -1;
+        }
+
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .skip-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .skip-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .loading-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            text-align: center;
+            display: none;
+        }
+
+        .volume-control {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+        }
+
+        .volume-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 100px;
+            height: 5px;
+            background: #fff;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video id="introVideo" autoplay>
+            <source src="assets/intro.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="loading-text" id="loadingText">
+        Loading game...
+    </div>
+
+    <div class="volume-control">
+        <img src="assets/play.png" alt="Volume" class="volume-icon" id="volumeIcon" onclick="toggleMute()">
+        <input type="range" min="0" max="1" step="0.1" value="1" class="volume-slider" id="volumeSlider">
+    </div>
+
+    <button class="skip-button" onclick="skipIntro()">Skip Intro</button>
+
+    <script>
+        const video = document.getElementById('introVideo');
+        const loadingText = document.getElementById('loadingText');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeIcon = document.getElementById('volumeIcon');
+
+        // Initialize audio with saved volume
+        function initAudio() {
+            const savedVolume = localStorage.getItem('gameVolume');
+            if (savedVolume !== null) {
+                const volume = parseFloat(savedVolume);
+                video.volume = volume;
+                volumeSlider.value = volume;
+                updateVolumeIcon();
+            }
+        }
+
+        // Volume slider control
+        volumeSlider.addEventListener('input', function() {
+            const volume = parseFloat(this.value);
+            video.volume = volume;
+            localStorage.setItem('gameVolume', volume);
+            updateVolumeIcon();
+        });
+
+        // Toggle mute function
+        function toggleMute() {
+            if (video.volume > 0) {
+                video.volume = 0;
+                volumeSlider.value = 0;
+            } else {
+                video.volume = 1;
+                volumeSlider.value = 1;
+            }
+            localStorage.setItem('gameVolume', video.volume);
+            updateVolumeIcon();
+        }
+
+        // Update volume icon based on volume level
+        function updateVolumeIcon() {
+            if (video.volume === 0) {
+                volumeIcon.src = 'assets/pause.png';
+            } else {
+                volumeIcon.src = 'assets/play.png';
+            }
+        }
+
+        // Initialize audio when page loads
+        window.addEventListener('load', initAudio);
+
+        video.addEventListener('ended', function() {
+            startGame();
+        });
+
+        function skipIntro() {
+            startGame();
+        }
+
+        function startGame() {
+            loadingText.style.display = 'block';
+            // Add a small delay to show the loading text
+            setTimeout(() => {
+                window.location.href = 'game.html';
+            }, 1000);
+        }
+
+        // Handle video loading error
+        video.addEventListener('error', function() {
+            console.log('Error loading video, skipping to game');
+            startGame();
+        });
+    </script>
+</body>
+</html> 
