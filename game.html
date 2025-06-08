@@ -178,10 +178,94 @@
     <script>window.onload = GameMaker_Init;</script>
 
     <script>
+    // Global audio manager
+    const AudioManager = {
+        volume: 0.3,
+        
+        init: function() {
+            // Load saved volume
+            const savedVolume = localStorage.getItem('gameVolume');
+            if (savedVolume !== null) {
+                this.volume = parseFloat(savedVolume);
+            }
+            
+            // Set up GameMaker volume
+            if (typeof g_volume !== 'undefined') {
+                g_volume = this.volume;
+            }
+
+            // Set up audio context with the same volume
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                this.audioContext = new AudioContextClass();
+                this.gainNode = this.audioContext.createGain();
+                this.gainNode.connect(this.audioContext.destination);
+                this.gainNode.gain.value = this.volume;
+            } catch (e) {
+                console.warn('Web Audio API not supported:', e);
+            }
+
+            // Update all audio elements
+            document.querySelectorAll('audio, video').forEach(element => {
+                element.volume = this.volume;
+            });
+        },
+        
+        setVolume: function(volume) {
+            this.volume = Math.max(0, Math.min(1, volume));
+            localStorage.setItem('gameVolume', this.volume);
+            
+            // Update GameMaker volume
+            if (typeof g_volume !== 'undefined') {
+                g_volume = this.volume;
+            }
+            
+            // Update Web Audio API
+            if (this.gainNode) {
+                this.gainNode.gain.value = this.volume;
+            }
+            
+            // Update all audio/video elements
+            document.querySelectorAll('audio, video').forEach(element => {
+                element.volume = this.volume;
+            });
+        }
+    };
+
+    // Initialize audio manager when the game loads
+    window.addEventListener('load', function() {
+        AudioManager.init();
+    });
+
+    // Listen for volume changes from other pages
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'gameVolume') {
+            AudioManager.setVolume(parseFloat(e.newValue));
+        }
+    });
+
     function pauseGame() {
         // Redirect to the settings page when paused
         window.location.href = 'settings.html';
     }
+
+    // Function to trigger middle cutscene
+    function showMiddleCutscene(nextLevel) {
+        console.log('Triggering middle cutscene');
+        // Save current game state if needed
+        localStorage.setItem('gameState', JSON.stringify({
+            // Add any game state you want to preserve
+            timestamp: Date.now()
+        }));
+        
+        // Redirect to middle cutscene
+        const cutsceneUrl = `middle-cutscene.html?next=${nextLevel || 'game.html'}`;
+        console.log('Redirecting to:', cutsceneUrl);
+        window.location.href = cutsceneUrl;
+    }
+
+    // Make the function available globally
+    window.showMiddleCutscene = showMiddleCutscene;
     </script>
 
     <!-- Builtin injector for injecting google analytics code -->
