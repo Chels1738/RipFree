@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RipFREE!</title>
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="RipFREE! - Play Now">
+    <meta property="og:description" content="Click to play RipFREE! - An exciting adventure game">
+    <meta property="og:image" content="https://ripfree.netlify.app/assets/background1.png">
+    <meta property="og:url" content="https://ripfree.netlify.app">
+    <meta property="og:type" content="website">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('assets/background1.png');
+            background-size: 105%;
+            background-position: center;
+            background-repeat: no-repeat;
+            cursor: url('assets/mouse.png') 0 0, auto;
+        }
+
+        .play-button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            width: 200px;
+            height: 100px;
+            background-image: url('assets/start.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            top: 47%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.2s ease;
+        }
+        .play-button:hover {
+           transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .settings-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .settings-button:hover {
+            transform: scale(1.1);
+        }
+
+        .settings-icon {
+            width: 40px;
+            height: auto;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .settings-button:hover .settings-icon {
+            opacity: 1;
+        }
+
+        .comment-section {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .comment-section.active {
+            right: 0;
+        }
+
+        .comment-toggle {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #404040;
+            color: #00ff00;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .comment-list {
+            height: calc(100vh - 180px);
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .comment {
+            background: #303030;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .comment-form {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 10px;
+            background: #303030;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .comment-submit {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.play-button').addEventListener('click', function() {
+                window.location.href = 'game.html';
+            });
+
+            // Load saved comments when page loads
+            loadComments();
+        });
+
+        function toggleComments() {
+            const commentSection = document.getElementById('commentSection');
+            commentSection.classList.toggle('active');
+        }
+
+        function loadComments() {
+            const commentList = document.getElementById('commentList');
+            const savedComments = JSON.parse(localStorage.getItem('gameComments') || '[]');
+            
+            // Clear existing comments
+            commentList.innerHTML = '';
+            
+            // Add each saved comment
+            savedComments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                commentElement.innerHTML = `
+                    <div style="color: #00ff00; margin-bottom: 5px;">Anonymous</div>
+                    <div style="color: #cccccc;">${comment.text}</div>
+                `;
+                commentList.appendChild(commentElement);
+            });
+            
+            // Scroll to bottom
+            commentList.scrollTop = commentList.scrollHeight;
+        }
+
+        function addComment() {
+            const commentInput = document.getElementById('commentInput');
+            const commentList = document.getElementById('commentList');
+            
+            if (commentInput.value.trim() !== '') {
+                // Create new comment object
+                const newComment = {
+                    text: commentInput.value,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Get existing comments
+                const savedComments = JSON.parse(localStorage.getItem('gameComments') || '[]');
+                
+                // Add new comment
+                savedComments.push(newComment);
+                
+                // Save to localStorage
+                localStorage.setItem('gameComments', JSON.stringify(savedComments));
+                
+                // Add to display
+                const comment = document.createElement('div');
+                comment.className = 'comment';
+                comment.innerHTML = `
+                    <div style="color: #00ff00; margin-bottom: 5px;">Anonymous</div>
+                    <div style="color: #cccccc;">${newComment.text}</div>
+                `;
+                commentList.appendChild(comment);
+                
+                // Clear input and scroll to bottom
+                commentInput.value = '';
+                commentList.scrollTop = commentList.scrollHeight;
+            }
+        }
+
+        // Allow submitting comments with Enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            const commentInput = document.getElementById('commentInput');
+            if (commentInput) {
+                commentInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        addComment();
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <button class="play-button"></button>
+    <a href="settings.html" class="settings-button">
+        <img src="assets/set.png" alt="Settings" class="settings-icon">
+    </a>
+
+    <button class="comment-toggle" onclick="toggleComments()">Comments</button>
+    <div class="comment-section" id="commentSection">
+        <h2 style="color: #00ff00; margin-top: 0;">Comments</h2>
+        <div class="comment-list" id="commentList">
+            <!-- Comments will be added here dynamically -->
+        </div>
+        <div class="comment-form">
+            <textarea class="comment-input" id="commentInput" placeholder="Write a comment..."></textarea>
+            <button class="comment-submit" onclick="addComment()">Post Comment</button>
+        </div>
+    </div>
+</body>
+</html>
