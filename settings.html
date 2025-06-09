@@ -16,7 +16,6 @@
         background-size: 105%;
         background-position: center;
         background-repeat: no-repeat;
-        cursor: url('assets/mouse.png') 0 0, auto;
     }
 
         .icon-row {
@@ -30,8 +29,8 @@
             left: -50px;
         }
         .circle-btn {
-            width: 150px;
-            height: 150px;
+            width: 200px;
+            height: 200px;
             border: 3px solid #222;
             border-radius: 50%;
             background: transparent;
@@ -46,24 +45,8 @@
             background: #f5e9b9;
         }
         .circle-btn svg {
-            width: 100px;
-            height: 100px;
-        }
-        .retry-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            margin-top: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            margin-left: 550px;
-        }
-        .retry-img {
-            width: 300px; /* Adjust size as needed */
-            height: auto;
-            display: block;
+            width: 140px;
+            height: 140px;
         }
         .center-group {
             margin-top: 60px; /* Adjust this value as needed */
@@ -108,7 +91,7 @@
             transform: scale(1.1);
         }
         .music-icon {
-            width: 80px; /* Increased size for better visibility */
+            width: 160px;
             height: auto;
             opacity: 0.7;
             transition: opacity 0.3s ease;
@@ -157,15 +140,12 @@
     <div class="center-group">
         <div class="icon-row">
             <button class="circle-btn" title="Play" onclick="resumeGame()">
-                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6,4 20,12 6,20 6,4"/></svg>
+                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6,4 20,12 6,20 6,4"/></svg>
             </button>
-            <button class="circle-btn" id="music-btn" title="Music">
-                <img src="assets/play.png" alt="Play/Pause" class="music-icon" id="musicIcon">
+            <button class="circle-btn" title="Retry" onclick="retryGame()">
+                <img src="assets/retry.png" alt="Retry" class="music-icon" id="musicIcon">
             </button>
         </div>
-        <button class="retry-btn" onclick="retryGame()">
-            <img src="assets/retry.png" alt="Retry" class="retry-img">
-        </button>
     </div>
 
     <div class="settings-container">
@@ -180,34 +160,19 @@
         window.location.href = 'game.html';
     }
     function retryGame() {
-        // Reload the game page (restart)
+        // Clear any saved game states
+        localStorage.removeItem('gameState');
+        localStorage.removeItem('gameCompleted');
+        localStorage.removeItem('gameSettings');
+        localStorage.removeItem('gameVolume');
+        localStorage.removeItem('gameAudioState');
+        
+        // Redirect directly to game
         window.location.href = 'game.html';
     }
     function goBack() {
         window.location.href = 'index.html';
     }
-    let isMusicPlaying = false;
-    const musicBtn = document.getElementById('music-btn');
-    const musicIcon = document.getElementById('musicIcon');
-    
-    function updateMusicIcon() {
-        musicIcon.src = isMusicPlaying ? 'assets/pause.png' : 'assets/play.png';
-    }
-
-    window.onload = function() {
-        const savedSettings = localStorage.getItem('gameSettings');
-        if (savedSettings) {
-            const settings = JSON.parse(savedSettings);
-            isMusicPlaying = settings.musicPlaying || false;
-            updateMusicIcon();
-        }
-    };
-    
-    musicBtn.addEventListener('click', function() {
-        isMusicPlaying = !isMusicPlaying;
-        updateMusicIcon();
-        localStorage.setItem('gameSettings', JSON.stringify({ musicPlaying: isMusicPlaying }));
-    });
     </script>
 </body>
 </html>
