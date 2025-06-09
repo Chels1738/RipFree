@@ -22,7 +22,6 @@
             background-size: 80%;
             background-position: center;
             background-repeat: no-repeat;
-            cursor: url('assets/mouse.png') 0 0, auto;
         }
 
         canvas {
@@ -98,8 +97,8 @@
             position: static;
             left: auto;
             top: auto;
-            width: 900px;   /* Reduced width */
-            height: 540px; 
+            width: 950px;   /* Increased from 900px */
+            height: 550px; 
             display: block;
         }
 
@@ -109,12 +108,12 @@
         input,
         select,
         textarea {
-            cursor: url('assets/mouse.png') 15 19, auto;
+            cursor: auto;
         }
 
         button,
         a {
-            cursor: pointer; /* or use another custom cursor if you want */
+            cursor: pointer;
         }
 
         /* Music Control Styles */
@@ -165,7 +164,7 @@
         <!-- Builtin injector for splash screen -->
 
         <!-- Create the canvas element the game draws to -->
-        <canvas id="canvas" width="1152" height="672">
+        <canvas id="canvas" width="1280" height="672">
             <p>Your browser doesn't support HTML5 canvas.</p>
         </canvas>
     </div>
@@ -189,6 +188,17 @@
                 this.volume = parseFloat(savedVolume);
             }
             
+            // Load audio state
+            const audioState = localStorage.getItem('gameAudioState');
+            if (audioState) {
+                try {
+                    const state = JSON.parse(audioState);
+                    this.setVolume(state.isPlaying ? state.volume : 0);
+                } catch (error) {
+                    console.error('Error loading audio state:', error);
+                }
+            }
+            
             // Set up GameMaker volume
             if (typeof g_volume !== 'undefined') {
                 g_volume = this.volume;
@@ -208,7 +218,39 @@
             // Update all audio elements
             document.querySelectorAll('audio, video').forEach(element => {
                 element.volume = this.volume;
+                element.muted = this.volume === 0;
             });
+
+            // Initialize GameMaker audio
+            this.initGameMakerAudio();
+        },
+
+        initGameMakerAudio: function() {
+            if (typeof g_audio !== 'undefined') {
+                // Set initial volume
+                g_audio.volume = this.volume;
+                
+                // Set up audio context if available
+                if (g_audio.audioContext) {
+                    g_audio.audioContext.resume();
+                }
+                
+                // Set up audio element if available
+                if (g_audio.audio) {
+                    g_audio.audio.volume = this.volume;
+                    g_audio.audio.muted = this.volume === 0;
+                }
+
+                // Set up all sound instances
+                if (g_audio._sounds) {
+                    for (let sound in g_audio._sounds) {
+                        if (g_audio._sounds[sound].audio) {
+                            g_audio._sounds[sound].audio.volume = this.volume;
+                            g_audio._sounds[sound].audio.muted = this.volume === 0;
+                        }
+                    }
+                }
+            }
         },
         
         setVolume: function(volume) {
@@ -228,7 +270,38 @@
             // Update all audio/video elements
             document.querySelectorAll('audio, video').forEach(element => {
                 element.volume = this.volume;
+                element.muted = this.volume === 0;
             });
+
+            // Update GameMaker audio
+            if (typeof g_audio !== 'undefined') {
+                g_audio.volume = this.volume;
+                
+                // Update main audio element
+                if (g_audio.audio) {
+                    g_audio.audio.volume = this.volume;
+                    g_audio.audio.muted = this.volume === 0;
+                }
+                
+                // Update audio context
+                if (g_audio.audioContext) {
+                    if (this.volume === 0) {
+                        g_audio.audioContext.suspend();
+                    } else {
+                        g_audio.audioContext.resume();
+                    }
+                }
+
+                // Update all sound instances
+                if (g_audio._sounds) {
+                    for (let sound in g_audio._sounds) {
+                        if (g_audio._sounds[sound].audio) {
+                            g_audio._sounds[sound].audio.volume = this.volume;
+                            g_audio._sounds[sound].audio.muted = this.volume === 0;
+                        }
+                    }
+                }
+            }
         }
     };
 
@@ -237,11 +310,21 @@
         AudioManager.init();
     });
 
-    // Listen for volume changes from other pages
+    // Listen for storage changes
     window.addEventListener('storage', function(e) {
-        if (e.key === 'gameVolume') {
-            AudioManager.setVolume(parseFloat(e.newValue));
+        if (e.key === 'gameAudioState') {
+            try {
+                const state = JSON.parse(e.newValue);
+                AudioManager.setVolume(state.isPlaying ? state.volume : 0);
+            } catch (error) {
+                console.error('Error handling audio state change:', error);
+            }
         }
+    });
+
+    // Listen for custom audio state changes
+    window.addEventListener('gameAudioStateChanged', function(e) {
+        AudioManager.setVolume(e.detail.isPlaying ? AudioManager.volume : 0);
     });
 
     function pauseGame() {
@@ -264,8 +347,21 @@
         window.location.href = cutsceneUrl;
     }
 
-    // Make the function available globally
+    // Function to handle game completion
+    function gameComplete() {
+        // Save completion state
+        localStorage.setItem('gameCompleted', 'true');
+        
+        // Clear any temporary game states
+        localStorage.removeItem('gameState');
+        
+        // Redirect to index page
+        window.location.href = 'index.html';
+    }
+
+    // Make the functions available globally
     window.showMiddleCutscene = showMiddleCutscene;
+    window.gameComplete = gameComplete;
     </script>
 
     <!-- Builtin injector for injecting google analytics code -->
