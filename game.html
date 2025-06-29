@@ -1,13 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta charset="utf-8"/>
-    <meta http-equiv="pragma" content="no-cache"/>
     <title>RipFFREE!</title>
     <style>
         body {
@@ -24,57 +20,29 @@
             background-position: center;
             background-repeat: no-repeat;
         }
-
-        canvas {
-            image-rendering: optimizeSpeed;
-            -webkit-interpolation-mode: nearest-neighbor;
-            -ms-touch-action: none;
-            touch-action: none;
-            margin: 0px;
-            padding: 0px;
-            border: 0px;
-            max-width: 100%;
-            max-height: 100vh;
+        @media (max-width: 600px) {
+            body {
+                background-size: 60%;
+            }
+            .comment-section,
+            .comment-toggle {
+                display: block !important;
+            }
         }
-
-        :-webkit-full-screen #canvas {
-            width: 100%;
-            height: 100%;
+        .gm4html5_div_class {
+            margin: 0;
+            padding: 0;
+            border: 0;
         }
-        :-webkit-full-screen {
-            width: 100%;
-            height: 100%;
+        #canvas {
+            display: block;
+            margin: auto;
+            background: #ccc;
         }
-        
-        /* Custom Runner Styles */
-        div.gm4html5_div_class {
-            margin: 0px;
-            padding: 0px;
-            border: 0px;
-            }
-        div.gm4html5_login {
-            padding: 20px;
-            position: absolute;
-            border: solid 2px #000000;
-            background-color: #404040;
-            color:#00ff00;
-            border-radius: 15px;
-            box-shadow: #101010 20px 20px 40px;
-            }
-        div.gm4html5_cancel_button {
-            float: right;
-            }
-        div.gm4html5_login_button {
-            float: left;
-            }
-        div.gm4html5_login_header {
-            text-align: center;
-            }
-
-        .pause-btn {
+        /* Pause and Home Button Styles */
+        .pause-btn, .home-btn {
             position: absolute;
             top: 24px;
-            right: 24px;
             background: rgba(0,0,0,0.5);
             border: none;
             border-radius: 50%;
@@ -86,289 +54,181 @@
             justify-content: center;
             transition: background 0.2s;
         }
-        .pause-btn:hover {
+        .pause-btn {
+            right: 24px;
+        }
+        .home-btn {
+            left: 24px;
+        }
+        .pause-btn:hover, .home-btn:hover {
             background: rgba(255,255,255,0.2);
         }
-        .pause-icon {
+        .pause-icon, .home-icon {
             width: 32px;
             height: 32px;
             display: block;
         }
-        #canvas {
-            position: static;
-            left: auto;
-            top: auto;
-            width: 900px;   /* Restored to original width */
-            height: 540px; 
-            display: block;
+        /* Comment Section Styles */
+        .comment-section {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
         }
-
-        body,
-        button,
-        a,
-        input,
-        select,
-        textarea {
-            cursor: auto;
+        .comment-section.active {
+            right: 0;
         }
-
-        button,
-        a {
-            cursor: pointer;
-        }
-
-        /* Music Control Styles */
-        .music-control {
-            position: absolute;
-            top: 24px;
-            left: 24px;
-            background: none;
+        .comment-toggle {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #404040;
+            color: #00ff00;
             border: none;
-            padding: 0;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            z-index: 20; /* Ensure it's above the canvas */
+            z-index: 1001;
         }
-
-        .music-control:hover {
-            transform: scale(1.1);
+        .comment-list {
+            height: calc(100vh - 180px);
+            overflow-y: auto;
+            margin-bottom: 20px;
         }
-
-        .music-icon {
-            width: 40px;
-            height: auto;
+        .comment {
+            background: #303030;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-family: monospace, "Courier New", Courier, sans-serif;
+            font-weight: 700;
+            font-style: normal;
+            font-size: 14px;
         }
-
-        #backgroundMusic {
-            display: none;
+        .comment-form {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+        }
+        .comment-input {
+            width: 100%;
+            padding: 10px;
+            background: #303030;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-family: monospace, "Courier New", Courier, sans-serif;
+            font-weight: 700;
+            font-style: normal;
+            font-size: 14px;
+        }
+        .comment-submit {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: monospace, "Courier New", Courier, sans-serif;
+            font-weight: 700;
+            font-style: normal;
+            font-size: 14px;
         }
     </style>
-
-    <!-- Custom PostStyle code is injected here -->
-
-    <!-- Builtin injector for injecting flurry analytics code -->
-
 </head>
 <body>
-    <!-- Custom PostHead code is injected here -->
-
-    <!-- Custom PreBody code is injected here -->
-
+    <button class="home-btn" onclick="window.location.href='index.html'">
+        <svg class="home-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12L12 3l9 9"/>
+            <path d="M9 21V9h6v12"/>
+        </svg>
+    </button>
     <button class="pause-btn" onclick="pauseGame()">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="pause-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <rect x="6" y="4" width="4" height="16"/>
             <rect x="14" y="4" width="4" height="16"/>
         </svg>
     </button>
     <div class="gm4html5_div_class" id="gm4html5_div_id">
-
-        <!-- Builtin injector for splash screen -->
-
-        <!-- Create the canvas element the game draws to -->
-        <canvas id="canvas" width="1152" height="672">
-            <p>Your browser doesn't support HTML5 canvas.</p>
-        </canvas>
+        <canvas id="canvas" width="900" height="540"></canvas>
     </div>
-
-    <!-- Run the game code -->
-    <script type="text/javascript" src="html5game/RipFree.js?cachebust=728263168"></script>
-
-    <!-- Builtin injector for injecting runner path -->
-
-    <script>window.onload = GameMaker_Init;</script>
-
+    <!-- Comment Section (only for large screens) -->
+    <button class="comment-toggle" onclick="toggleComments()">Comments</button>
+    <div class="comment-section" id="commentSection">
+        <h2 style="color: #00ff00; margin-top: 0;">Comments</h2>
+        <div class="comment-list" id="commentList"></div>
+        <div class="comment-form">
+            <textarea class="comment-input" id="commentInput" placeholder="Write a comment..."></textarea>
+            <button class="comment-submit" onclick="addComment()">Post Comment</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="html5game/RipFree.js"></script>
     <script>
-    // Global audio manager
-    const AudioManager = {
-        volume: 0.3,
-        
-        init: function() {
-            // Load saved volume
-            const savedVolume = localStorage.getItem('gameVolume');
-            if (savedVolume !== null) {
-                this.volume = parseFloat(savedVolume);
-            }
-            
-            // Load audio state
-            const audioState = localStorage.getItem('gameAudioState');
-            if (audioState) {
-                try {
-                    const state = JSON.parse(audioState);
-                    this.setVolume(state.isPlaying ? state.volume : 0);
-                } catch (error) {
-                    console.error('Error loading audio state:', error);
-                }
-            }
-            
-            // Set up GameMaker volume
-            if (typeof g_volume !== 'undefined') {
-                g_volume = this.volume;
-            }
-
-            // Set up audio context with the same volume
-            try {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                this.audioContext = new AudioContextClass();
-                this.gainNode = this.audioContext.createGain();
-                this.gainNode.connect(this.audioContext.destination);
-                this.gainNode.gain.value = this.volume;
-            } catch (e) {
-                console.warn('Web Audio API not supported:', e);
-            }
-
-            // Update all audio elements
-            document.querySelectorAll('audio, video').forEach(element => {
-                element.volume = this.volume;
-                element.muted = this.volume === 0;
+        window.onload = GameMaker_Init;
+        function pauseGame() {
+            window.location.href = 'settings.html';
+        }
+        function toggleComments() {
+            const commentSection = document.getElementById('commentSection');
+            commentSection.classList.toggle('active');
+        }
+        function loadComments() {
+            const commentList = document.getElementById('commentList');
+            const savedComments = JSON.parse(localStorage.getItem('gameComments') || '[]');
+            commentList.innerHTML = '';
+            savedComments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                commentElement.innerHTML = `
+                    <div style="color: #00ff00; margin-bottom: 5px;">Anonymous</div>
+                    <div style="color: #cccccc;">${comment.text}</div>
+                `;
+                commentList.appendChild(commentElement);
             });
-
-            // Initialize GameMaker audio
-            this.initGameMakerAudio();
-        },
-
-        initGameMakerAudio: function() {
-            if (typeof g_audio !== 'undefined') {
-                // Set initial volume
-                g_audio.volume = this.volume;
-                
-                // Set up audio context if available
-                if (g_audio.audioContext) {
-                    g_audio.audioContext.resume();
-                }
-                
-                // Set up audio element if available
-                if (g_audio.audio) {
-                    g_audio.audio.volume = this.volume;
-                    g_audio.audio.muted = this.volume === 0;
-                }
-
-                // Set up all sound instances
-                if (g_audio._sounds) {
-                    for (let sound in g_audio._sounds) {
-                        if (g_audio._sounds[sound].audio) {
-                            g_audio._sounds[sound].audio.volume = this.volume;
-                            g_audio._sounds[sound].audio.muted = this.volume === 0;
-                        }
-                    }
-                }
-            }
-        },
-        
-        setVolume: function(volume) {
-            this.volume = Math.max(0, Math.min(1, volume));
-            localStorage.setItem('gameVolume', this.volume);
-            
-            // Update GameMaker volume
-            if (typeof g_volume !== 'undefined') {
-                g_volume = this.volume;
-            }
-            
-            // Update Web Audio API
-            if (this.gainNode) {
-                this.gainNode.gain.value = this.volume;
-            }
-            
-            // Update all audio/video elements
-            document.querySelectorAll('audio, video').forEach(element => {
-                element.volume = this.volume;
-                element.muted = this.volume === 0;
-            });
-
-            // Update GameMaker audio
-            if (typeof g_audio !== 'undefined') {
-                g_audio.volume = this.volume;
-                
-                // Update main audio element
-                if (g_audio.audio) {
-                    g_audio.audio.volume = this.volume;
-                    g_audio.audio.muted = this.volume === 0;
-                }
-                
-                // Update audio context
-                if (g_audio.audioContext) {
-                    if (this.volume === 0) {
-                        g_audio.audioContext.suspend();
-                    } else {
-                        g_audio.audioContext.resume();
-                    }
-                }
-
-                // Update all sound instances
-                if (g_audio._sounds) {
-                    for (let sound in g_audio._sounds) {
-                        if (g_audio._sounds[sound].audio) {
-                            g_audio._sounds[sound].audio.volume = this.volume;
-                            g_audio._sounds[sound].audio.muted = this.volume === 0;
-                        }
-                    }
-                }
+            commentList.scrollTop = commentList.scrollHeight;
+        }
+        function addComment() {
+            const commentInput = document.getElementById('commentInput');
+            const commentList = document.getElementById('commentList');
+            if (commentInput.value.trim() !== '') {
+                const newComment = {
+                    text: commentInput.value,
+                    timestamp: new Date().toISOString()
+                };
+                const savedComments = JSON.parse(localStorage.getItem('gameComments') || '[]');
+                savedComments.push(newComment);
+                localStorage.setItem('gameComments', JSON.stringify(savedComments));
+                const comment = document.createElement('div');
+                comment.className = 'comment';
+                comment.innerHTML = `
+                    <div style="color: #00ff00; margin-bottom: 5px;">Anonymous</div>
+                    <div style="color: #cccccc;">${newComment.text}</div>
+                `;
+                commentList.appendChild(comment);
+                commentInput.value = '';
+                commentList.scrollTop = commentList.scrollHeight;
             }
         }
-    };
-
-    // Initialize audio manager when the game loads
-    window.addEventListener('load', function() {
-        AudioManager.init();
-    });
-
-    // Listen for storage changes
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'gameAudioState') {
-            try {
-                const state = JSON.parse(e.newValue);
-                AudioManager.setVolume(state.isPlaying ? state.volume : 0);
-            } catch (error) {
-                console.error('Error handling audio state change:', error);
+        document.addEventListener('DOMContentLoaded', function() {
+            loadComments();
+            const commentInput = document.getElementById('commentInput');
+            if (commentInput) {
+                commentInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        addComment();
+                    }
+                });
             }
-        }
-    });
-
-    // Listen for custom audio state changes
-    window.addEventListener('gameAudioStateChanged', function(e) {
-        AudioManager.setVolume(e.detail.isPlaying ? AudioManager.volume : 0);
-    });
-
-    function pauseGame() {
-        // Redirect to the settings page when paused
-        window.location.href = 'settings.html';
-    }
-
-    // Function to trigger middle cutscene
-    function showMiddleCutscene(nextLevel) {
-        console.log('Triggering middle cutscene');
-        // Save current game state if needed
-        localStorage.setItem('gameState', JSON.stringify({
-            // Add any game state you want to preserve
-            timestamp: Date.now()
-        }));
-        
-        // Redirect to middle cutscene
-        const cutsceneUrl = `middle-cutscene.html?next=${nextLevel || 'game.html'}`;
-        console.log('Redirecting to:', cutsceneUrl);
-        window.location.href = cutsceneUrl;
-    }
-
-    // Function to handle game completion
-    function gameComplete() {
-        // Save completion state
-        localStorage.setItem('gameCompleted', 'true');
-        
-        // Clear any temporary game states
-        localStorage.removeItem('gameState');
-        
-        // Redirect to index page
-        window.location.href = 'index.html';
-    }
-
-    // Make the functions available globally
-    window.showMiddleCutscene = showMiddleCutscene;
-    window.gameComplete = gameComplete;
+        });
     </script>
-
-    <!-- Builtin injector for injecting google analytics code -->
-
 </body>
-
-<!-- Custom PostBody code is injected here -->
-
 </html>
