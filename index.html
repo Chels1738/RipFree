@@ -24,14 +24,16 @@
             margin: 0;
             padding: 0;
             height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #000000;
             background-image: url('assets/background1.png');
-            background-size: 105%;
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
         .play-button {
@@ -163,15 +165,103 @@
             font-style: normal;
             font-size: 14px;
         }
+
+        .mobile-disclaimer-box {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+        .mobile-disclaimer-modal {
+            background: rgba(34,34,34,0.95);
+            color: #ff4444;
+            text-align: center;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+            padding: 32px 24px 24px 24px;
+            max-width: 90vw;
+            width: 350px;
+            margin: auto;
+        }
+        .mobile-disclaimer-message {
+            font-size: 1.1em;
+            font-family: monospace, 'Courier New', Courier, sans-serif;
+            margin-bottom: 20px;
+        }
+        .mobile-disclaimer-btn {
+            display: none;
+        }
+        @media (max-width: 900px) {
+            .mobile-disclaimer-box {
+                display: flex;
+            }
+            .mobile-disclaimer-btn {
+                display: block;
+                margin: 0 auto;
+                background: #404040;
+                color: #00ff00;
+                border: none;
+                padding: 16px 32px;
+                border-radius: 8px;
+                font-size: 1.2em;
+                font-family: monospace, 'Courier New', Courier, sans-serif;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            .start-btn {
+                display: none !important;
+            }
+        }
+        .start-btn {
+            display: block;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            width: 200px;
+            height: 100px;
+            background-image: url('assets/start.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            top: 47%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.2s ease;
+        }
+        .start-btn:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('.play-button').addEventListener('click', function() {
-                window.location.href = 'intro.html';
-            });
-
             // Load saved comments when page loads
             loadComments();
+            var disclaimerModal = document.getElementById('disclaimerModal');
+            var disclaimerBtn = document.getElementById('disclaimerBtn');
+            var closeDisclaimerBtn = document.getElementById('closeDisclaimerBtn');
+            if (disclaimerModal && disclaimerBtn && closeDisclaimerBtn) {
+                disclaimerModal.style.display = 'none';
+                disclaimerBtn.addEventListener('click', function() {
+                    disclaimerModal.style.display = 'flex';
+                });
+                closeDisclaimerBtn.addEventListener('click', function() {
+                    disclaimerModal.style.display = 'none';
+                });
+            }
+            var startBtn = document.getElementById('startBtn');
+            if (startBtn) {
+                startBtn.addEventListener('click', function() {
+                    window.location.href = 'intro.html';
+                });
+            }
         });
 
         function toggleComments() {
@@ -251,7 +341,6 @@
     </script>
 </head>
 <body>
-    <button class="play-button"></button>
     <a href="settings.html" class="settings-button">
         <img src="assets/set.png" alt="Settings" class="settings-icon">
     </a>
@@ -267,5 +356,15 @@
             <button class="comment-submit" onclick="addComment()">Post Comment</button>
         </div>
     </div>
+    <button class="mobile-disclaimer-btn" id="disclaimerBtn">Disclaimer</button>
+    <div class="mobile-disclaimer-box" id="disclaimerModal">
+        <div class="mobile-disclaimer-modal">
+            <div class="mobile-disclaimer-message">
+                <b>Disclaimer:</b> This game only functions with a keyboard on computer screens. For the best experience, please play on a laptop or desktop.
+            </div>
+            <button class="mobile-disclaimer-btn" id="closeDisclaimerBtn">OK</button>
+        </div>
+    </div>
+    <button class="start-btn" id="startBtn" aria-label="Start"></button>
 </body>
 </html>
